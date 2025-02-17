@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing/domain/entities/currency.dart';
 import 'package:testing/presentation/cubit/currency_cubit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:testing/presentation/screens/rate_conversion_screen.dart';
 
 class CurrencyExchangeRateScreen extends StatefulWidget {
   const CurrencyExchangeRateScreen({super.key});
@@ -124,7 +125,9 @@ class _CurrencyExchangeRateScreenState
                     children: [
                       Container(height: 20),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/rate_conversion');
+                        },
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20), // 設置圓角
