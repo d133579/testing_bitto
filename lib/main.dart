@@ -4,6 +4,7 @@ import 'package:testing/domain/use_cases/get_currency_pairs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing/presentation/cubit/currency_cubit.dart';
 import 'package:testing/presentation/screens/currency_exchange_rate_screen.dart';
+import 'package:testing/presentation/screens/currency_selcetion_page.dart';
 import 'package:testing/presentation/screens/rate_conversion_screen.dart';
 
 import 'data/data_sources/currency_api_client.dart';
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         home: CurrencyExchangeRateScreen(),
-        routes: {'/rate_conversion': (context) => RateConversionScreen()},
+        routes: {'/rate_conversion': (context) => RateConversionScreen(),
+          '/currency_selection': (context) => CurrencySelectionScreen(),},
       ),
     );
   }

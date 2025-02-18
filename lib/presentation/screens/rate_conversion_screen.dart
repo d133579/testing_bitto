@@ -135,7 +135,27 @@ class _RateConversionScreenState extends State<RateConversionScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            buildCurrencyRow(context, fromController),
+            GestureDetector(
+              onTap: () async {
+                final result = await Navigator.pushNamed(
+                  context,
+                  '/currency_selection',
+                );
+                if (result != null && result is Currency) {
+                  setState(() {
+                    from = result;
+                    double converted = context.read<CurrencyCubit>().convertCurrency(
+                      amount: fromController.text,
+                      from: from,
+                      to: to,
+                    );
+                    toController.text = '$converted';
+                  });
+                }
+              },
+              child: buildCurrencyRow(context, fromController),
+            ),
+
             const SizedBox(height: 16),
             Container(
               width: MediaQuery.sizeOf(context).width - 32,
@@ -176,7 +196,27 @@ class _RateConversionScreenState extends State<RateConversionScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            buildCurrencyRow(context, toController, readOnly: true),
+
+            GestureDetector(
+              onTap: () async {
+                final result = await Navigator.pushNamed(
+                  context,
+                  '/currency_selection',
+                );
+                if (result != null && result is Currency) {
+                  setState(() {
+                    to = result;
+                    double converted = context.read<CurrencyCubit>().convertCurrency(
+                      amount: fromController.text,
+                      from: from,
+                      to: to,
+                    );
+                    toController.text = '$converted';
+                  });
+                }
+              },
+              child: buildCurrencyRow(context, toController, readOnly: true),
+            ),
           ],
         ),
       ),
