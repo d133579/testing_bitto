@@ -24,6 +24,13 @@ class _RateConversionScreenState extends State<RateConversionScreen> {
     to = currencies.length > 1 ? currencies[1] : from;
   }
 
+  @override
+  void dispose() {
+    fromController.dispose();
+    toController.dispose();
+    super.dispose();
+  }
+
   Widget buildCurrencyDropdown(BuildContext context, String currency) {
     return Container(
       width: MediaQuery.sizeOf(context).width * 0.35,
@@ -103,6 +110,20 @@ class _RateConversionScreenState extends State<RateConversionScreen> {
     });
   }
 
+  Future<void> selectCurrency({required bool isFrom}) async {
+    final result = await Navigator.pushNamed(context, '/currency_selection');
+    if (result is Currency) {
+      setState(() {
+        if (isFrom) {
+          from = result;
+        } else {
+          to = result;
+        }
+      });
+      updateConversion(fromController.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,26 +157,9 @@ class _RateConversionScreenState extends State<RateConversionScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
-              onTap: () async {
-                final result = await Navigator.pushNamed(
-                  context,
-                  '/currency_selection',
-                );
-                if (result != null && result is Currency) {
-                  setState(() {
-                    from = result;
-                    double converted = context.read<CurrencyCubit>().convertCurrency(
-                      amount: fromController.text,
-                      from: from,
-                      to: to,
-                    );
-                    toController.text = '$converted';
-                  });
-                }
-              },
+              onTap: () => selectCurrency(isFrom: true),
               child: buildCurrencyRow(context, fromController),
             ),
-
             const SizedBox(height: 16),
             Container(
               width: MediaQuery.sizeOf(context).width - 32,
@@ -196,25 +200,8 @@ class _RateConversionScreenState extends State<RateConversionScreen> {
               ),
             ),
             const SizedBox(height: 16),
-
             GestureDetector(
-              onTap: () async {
-                final result = await Navigator.pushNamed(
-                  context,
-                  '/currency_selection',
-                );
-                if (result != null && result is Currency) {
-                  setState(() {
-                    to = result;
-                    double converted = context.read<CurrencyCubit>().convertCurrency(
-                      amount: fromController.text,
-                      from: from,
-                      to: to,
-                    );
-                    toController.text = '$converted';
-                  });
-                }
-              },
+              onTap: () => selectCurrency(isFrom: false),
               child: buildCurrencyRow(context, toController, readOnly: true),
             ),
           ],
